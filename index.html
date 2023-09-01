@@ -91,7 +91,7 @@
 				<button id="hoch" type="button" class="btn btn-primary">&nbsp;<span class="oi oi-chevron-bottom"></span>&nbsp;</button>
 			</div>
 			<span id="PiPButtonSpan">
-			<button id="PiPButton" type="button" class="btn btn-lg btn-primary ">&nbsp;<span class="oi oi-external-link"></span>&nbsp;</button>
+				<button id="PiPButton" type="button" class="btn btn-lg btn-primary ">&nbsp;<span class="oi oi-external-link"></span>&nbsp;</button>
 			</span>
 		</div>
 		<div class="col-1 ml d-none d-lg-block">
@@ -104,22 +104,13 @@
 			<div class="collapse" id="SenderPanel">
 				<div class="card bg-secondary">
 					<div class="card-body bg-dark">
-
-					
-					
-					
-					<p id="sender"></p>
-
-					            <script>
-                                var senderp = document.getElementById("sender");
-                                for (i = 0; i < SenderSelectors.length; i++) {
-						            senderp.innerHTML += ( "<button id='"+SenderSelectors[i]+"' type='button' class='btn btn-primary btn-space ' onclick='playTV("+i+");'>" + SenderSelectors[i] + "</button> "); 
-					                }
-                                
-                            
-                        
-                    </script>
-					
+						<p id="sender"></p>
+						<script>
+							var senderp = document.getElementById("sender");
+							for (i = 0; i < SenderSelectors.length; i++) {
+								senderp.innerHTML += ( "<button id='"+SenderSelectors[i]+"' type='button' class='btn btn-primary btn-space ' onclick='play_tv("+i+");'>" + SenderSelectors[i] + "</button> "); 
+								}
+                    	</script>
 					</div>
 				</div>
 			</div>
@@ -138,14 +129,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
-
 	$(function() {
 	  $('button').click( function() {
 		$(this).addClass('active').siblings().removeClass('active');
 	  });
 	});
 	 
-	function playTV(Selector) {
+	function play_tv(Selector) {
 		SenderIndex = Selector;
 		if(Hls.isSupported()){
 			hls.loadSource(SenderListe[SenderSelectors[Selector]]); 
@@ -159,10 +149,10 @@
 			video.play();
   			});
 		}
-		lauft(Selector)
+		set_sender(Selector);
 	}
 
-	function leise(e){
+	function do_mute(e){
 		if((e.type == "keydown" && e.which == 77 ) ||(e.type == "click")){
 	  		if( $("video").prop('muted') ) {
 				$("video").prop('muted', false);
@@ -205,20 +195,20 @@
 		}
 	}
 
-	function vollbild(e){
+	function do_fullscreen(e){
 		if((e.type == "keydown" && e.which == 70 )||(e.type == "click")){
 			fullscreen();
 		}
 	}
 
-	function lauft(Selector) {
+	function set_sender(Selector) {
 		SenderName = SenderSelectors[Selector];
 		$('#' + SenderName).addClass('active').siblings().removeClass('active');
 		$('#senderknopf').text(SenderName);
 		$('#senderknopf-sm').text(SenderName);
 	}	  
 	  
-	function hochschalten(e){
+	function do_up(e){
 	  if((e.type == "keydown" && (e.which == 187 || e.which == 107 || e.which == 171))||(e.type == "click")){
 			if(SenderIndex+1 == SenderSelectors.length ) {
 				SenderIndex = 0;
@@ -227,11 +217,11 @@
 				SenderIndex = SenderIndex+1;
 				video.pause();
 			}
-			playTV(SenderIndex); 
+			play_tv(SenderIndex); 
 		}
 	}
 
-	function runterschalten(e){
+	function do_down(e){
 	  if((e.type == "keydown" && (e.which == 189 || e.which == 109 || e.which == 173))||(e.type == "click")){
 			if(SenderIndex-1 < 0 ) {
 				SenderIndex = SenderSelectors.length-1;
@@ -240,7 +230,7 @@
 				SenderIndex = SenderIndex-1;
 				video.pause();
 			}
-			playTV(SenderIndex); 
+			play_tv(SenderIndex); 
 		}
 	}
     function zeigeSender(e) {
@@ -249,21 +239,21 @@
         }
     }
 
-	$('body').keydown(hochschalten);
-	$('body').keydown(runterschalten);
-	$('body').keydown(vollbild);
-	$('body').keydown(leise);
+	$('body').keydown(do_up);
+	$('body').keydown(do_down);
+	$('body').keydown(do_fullscreen);
+	$('body').keydown(do_mute);
 	$('body').keydown(zeigeSender);
-	$('#hoch').click(hochschalten);
-	$('#runter').click(runterschalten);
-	$('#fullscreen').click(vollbild);
-	$('#mute-video').click(leise);
+	$('#hoch').click(do_up);
+	$('#runter').click(do_down);
+	$('#fullscreen').click(do_fullscreen);
+	$('#mute-video').click(do_mute);
 
 	var PiP = document.getElementById('PiPButton');
 	var isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|webOS|BlackBerry|IEMobile|Opera Mini)/i) || false;
 	var video = document.getElementById('video');
 	var hls = new Hls();
-	playTV(0);
+	play_tv(0);
 
 	if (isMobile[0] == 'iPad' || isMobile == false) {
 		// picture-in-picture
